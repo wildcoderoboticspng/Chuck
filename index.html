@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chuck - Business Management Matrix</title>
+    <title>Chuck OS - Business Intelligence Matrix</title>
     <style>
         :root {
             --bg-main: #040812;
@@ -15,6 +15,7 @@
             --text-cyan: #70ffff;
             --text-dim: #00a8b3;
             --alert-red: #ff2a2a;
+            --neon-green: #00ff66;
         }
 
         * {
@@ -37,7 +38,7 @@
 
         .display-frame {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
             background: #020408;
             border: 2px solid #1a2b4c;
             border-radius: 8px;
@@ -68,9 +69,9 @@
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 280px 1fr 280px;
+            grid-template-columns: 280px 1fr 300px;
             gap: 10px;
-            height: 500px;
+            height: 520px;
         }
 
         .panel {
@@ -127,17 +128,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
+            padding: 15px;
         }
 
         .ai-core-container {
             position: relative;
-            width: 240px;
-            height: 240px;
+            width: 220px;
+            height: 220px;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: auto 0;
         }
 
         .ring {
@@ -148,28 +151,28 @@
         }
 
         .ring-outer {
-            width: 220px;
-            height: 220px;
+            width: 200px;
+            height: 200px;
             border-color: var(--border-cyan);
             box-shadow: 0 0 15px var(--glow-cyan);
         }
 
         .ring-mid {
-            width: 160px;
-            height: 160px;
+            width: 140px;
+            height: 140px;
             border: 2px solid var(--neon-purple);
             animation: spin-reverse 8s linear infinite;
         }
 
         .ring-inner {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             border-color: var(--neon-orange);
         }
 
         .core-center {
-            width: 75px;
-            height: 75px;
+            width: 65px;
+            height: 65px;
             background: radial-gradient(circle, #fff 0%, var(--border-cyan) 60%, transparent 100%);
             border-radius: 50%;
             display: flex;
@@ -178,7 +181,7 @@
             box-shadow: 0 0 25px var(--border-cyan);
             color: #000;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             letter-spacing: 1px;
         }
 
@@ -193,7 +196,7 @@
             flex-direction: column;
             gap: 6px;
             overflow-y: auto;
-            max-height: 160px;
+            max-height: 150px;
         }
 
         .feed-list li {
@@ -211,6 +214,7 @@
 
         .call-banner {
             display: none;
+            width: 100%;
             background: rgba(255, 42, 42, 0.2);
             border: 1px solid var(--alert-red);
             color: #fff;
@@ -229,7 +233,7 @@
 
         .bottom-console {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
             gap: 8px;
         }
 
@@ -247,7 +251,7 @@
             border: 1px solid var(--border-cyan);
             color: var(--text-cyan);
             padding: 8px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             cursor: pointer;
             text-align: center;
             transition: all 0.2s ease;
@@ -265,11 +269,13 @@
 
 <div class="display-frame">
     <div class="top-bar">
-        <div><strong>CHUCK OS</strong> | Operator: MR WAYNE</div>
+        <div><strong>CHUCK OS v3.0</strong> | Operator: MR WAYNE</div>
+        <div>ENTITY: WildCode Developers</div>
         <div class="phone-badge">Target: +27 612832392</div>
     </div>
 
     <div class="dashboard-grid">
+        <!-- Left Panel: Agents & Focus -->
         <div class="panel">
             <div class="panel-header"><span>Active Agents</span><span>4 ONLINE</span></div>
             <div class="agent-grid">
@@ -283,8 +289,9 @@
             <ul class="feed-list" id="agentTasks"></ul>
         </div>
 
+        <!-- Center Panel: Central Intelligence Core -->
         <div class="panel col-center">
-            <div class="panel-header" style="width:100%;"><span>Chuck Central Engine</span><span>Monitoring</span></div>
+            <div class="panel-header" style="width:100%;"><span>Chuck Core Reasoning Engine</span><span>Active</span></div>
             
             <div class="ai-core-container">
                 <div class="ring ring-outer"></div>
@@ -294,40 +301,38 @@
             </div>
 
             <div class="call-banner" id="callBanner">
-                <div>🚨 <strong>CLIENT DETECTED</strong></div>
+                <div>🚨 <strong>INBOUND CLIENT INQUIRY</strong></div>
                 <button class="console-btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="makeCall()">CALL MR WAYNE</button>
             </div>
         </div>
 
+        <!-- Right Panel: Knowledge Base Memory & Phone Management -->
         <div class="panel">
-            <div class="panel-header"><span>System Diagnostics</span></div>
-            <div style="font-size: 0.7rem; color: var(--text-dim); line-height: 1.5;">
-                > OPERATOR: MR WAYNE<br>
-                > VOICE: MALE SYNTHESIS<br>
-                > REASONING ENGINE: ONLINE<br>
-                > ROUTE: +27 612832392
-            </div>
+            <div class="panel-header"><span>Permanent Memory</span><span id="memCount">0 KB</span></div>
+            <ul class="feed-list" id="knowledgeList"></ul>
 
-            <div class="panel-header" style="margin-top:10px;"><span>Chuck's Decisions & Memory</span></div>
+            <div class="panel-header" style="margin-top:10px;"><span>System Audit & Decisions</span></div>
             <ul class="feed-list" id="activityLog"></ul>
         </div>
     </div>
 
+    <!-- Bottom Controls & Command Line -->
     <div class="bottom-console">
-        <input type="text" id="cmdInput" class="cmd-input" placeholder="Command Chuck, MR WAYNE..." onkeydown="if(event.key==='Enter') executeCommand()">
+        <input type="text" id="cmdInput" class="cmd-input" placeholder="Command Chuck or teach ('learn: ...')..." onkeydown="if(event.key==='Enter') executeCommand()">
         <button class="console-btn" onclick="executeCommand()">Execute</button>
-        <button class="console-btn" style="border-color: var(--neon-orange); color: var(--neon-orange);" onclick="simulateClientArrival()">Simulate Client</button>
-        <button class="console-btn" style="border-color: var(--alert-red); color: var(--alert-red);" onclick="clearMemory()">Clear Memory</button>
+        <button class="console-btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="triggerAdCampaign()">Run Campaign</button>
+        <button class="console-btn" style="border-color: var(--neon-orange); color: var(--neon-orange);" onclick="simulateClientArrival()">Simulate Lead</button>
+        <button class="console-btn" style="border-color: var(--alert-red); color: var(--alert-red);" onclick="clearMemory()">Reset Knowledge</button>
     </div>
 </div>
 
 <script>
     const targetPhone = "+27612832392";
+    const businessURL = "https://wildcodedevelopers-svg.github.io/WILDCODE-DEVELOPERS/";
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const synth = window.speechSynthesis;
     let maleVoice = null;
 
-    // Load available voices and lock onto a Male voice
     function loadMaleVoice() {
         const voices = synth.getVoices();
         maleVoice = voices.find(v => v.name.toLowerCase().includes('male') || v.name.includes('David') || v.name.includes('George') || v.name.includes('Google UK English Male')) || voices[0];
@@ -337,20 +342,29 @@
     }
 
     const agentData = {
-        CHALS: { role: "Sales & Client Lead", tasks: ["Monitoring inbound client leads", "Drafting commercial proposals", "Tracking high-value conversions"] },
-        MAT: { role: "Development & Engineering", tasks: ["Deploying web infrastructure", "Checking system uptime & code build", "Optimizing backend response times"] },
-        PRINXE: { role: "Project Management", tasks: ["Managing client delivery timelines", "Coordinating agent workloads", "Organizing project milestones"] },
-        OESTRO: { role: "Finance & Operations", tasks: ["Auditing active invoices", "Tracking incoming revenue", "Managing monthly business budgets"] }
+        CHALS: { role: "Sales & Marketing", tasks: ["Running ads for WildCode Developers", "Converting client inquiries", "Promoting site: " + businessURL] },
+        MAT: { role: "Development & Systems", tasks: ["Auditing frontend code performance", "Monitoring hosting uptime", "Optimizing UI components"] },
+        PRINXE: { role: "Project Lead", tasks: ["Managing client build schedules", "Allocating developer resources", "Tracking milestone deadlines"] },
+        OESTRO: { role: "Finance & Accounts", tasks: ["Auditing active web design quotes", "Managing payment collection", "Tracking revenue targets"] }
     };
 
-    let commandMemory = JSON.parse(localStorage.getItem("chuck_memory")) || [
-        "Chuck OS ready for MR WAYNE.",
-        "Agents CHALS, MAT, PRINXE, and OESTRO on standby."
+    // Permanent Knowledge Store for Chuck
+    let knowledgeBase = JSON.parse(localStorage.getItem("chuck_knowledge")) || [
+        "Business Name: WildCode Developers",
+        "Website: https://wildcodedevelopers-svg.github.io/WILDCODE-DEVELOPERS/",
+        "Primary Focus: High-performance Frontend Web Design and Web Development",
+        "Target Contact Route: +27 612832392"
+    ];
+
+    let auditLog = JSON.parse(localStorage.getItem("chuck_audit")) || [
+        "Chuck OS core operational for MR WAYNE.",
+        "System knowledge base loaded."
     ];
 
     window.onload = function() {
         loadMaleVoice();
-        renderMemory();
+        renderKnowledge();
+        renderAudit();
         selectAgent('CHALS');
     };
 
@@ -368,13 +382,12 @@
         osc.stop(audioCtx.currentTime + duration);
     }
 
-    // Male Voice Speak Execution
     function speak(text) {
         if (synth.speaking) synth.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         if (maleVoice) utterance.voice = maleVoice;
         utterance.rate = 0.95;
-        utterance.pitch = 0.8; // Low pitch for deep male voice tone
+        utterance.pitch = 0.8;
         synth.speak(utterance);
     }
 
@@ -393,81 +406,127 @@
         });
     }
 
-    function renderMemory() {
+    function renderKnowledge() {
+        const kList = document.getElementById('knowledgeList');
+        kList.innerHTML = '';
+        knowledgeBase.forEach(item => {
+            const li = document.createElement('li');
+            li.innerText = item;
+            kList.prepend(li);
+        });
+        document.getElementById('memCount').innerText = `${knowledgeBase.length} ITEMS`;
+    }
+
+    function renderAudit() {
         const log = document.getElementById('activityLog');
         log.innerHTML = '';
-        commandMemory.forEach(item => {
+        auditLog.forEach(item => {
             const li = document.createElement('li');
             li.innerText = item;
             log.prepend(li);
         });
     }
 
-    function saveToMemory(text) {
-        commandMemory.push(text);
-        if (commandMemory.length > 20) commandMemory.shift();
-        localStorage.setItem("chuck_memory", JSON.stringify(commandMemory));
-        renderMemory();
+    function storeKnowledge(fact) {
+        knowledgeBase.push(fact);
+        localStorage.setItem("chuck_knowledge", JSON.stringify(knowledgeBase));
+        renderKnowledge();
+    }
+
+    function storeAudit(text) {
+        auditLog.push(text);
+        if (auditLog.length > 15) auditLog.shift();
+        localStorage.setItem("chuck_audit", JSON.stringify(auditLog));
+        renderAudit();
     }
 
     function simulateClientArrival() {
         playTone(900, 'sawtooth', 0.4);
         document.getElementById('callBanner').style.display = 'flex';
-        const reasoning = "Client activity detected. Initiating immediate contact alert for MR WAYNE.";
-        saveToMemory(`Decision: ${reasoning}`);
-        speak(`MR WAYNE, a client has reached out. Dialing your line now.`);
+        selectAgent('CHALS');
+        storeAudit("Inbound lead captured via WildCode Developers platform.");
+        speak("MR WAYNE, a client lead has arrived. Preparing line transfer to plus 2 7 6 1 2 8 3 2 3 9 2.");
     }
 
     function makeCall() {
         playTone(1200);
-        saveToMemory(`Calling MR WAYNE at ${targetPhone}`);
+        storeAudit(`Routing voice channel to MR WAYNE at ${targetPhone}`);
         window.location.href = `tel:${targetPhone}`;
     }
 
-    // Reasoning Engine
-    function analyzeAndReason(cmd) {
-        const query = cmd.toLowerCase();
+    function triggerAdCampaign() {
+        playTone(800);
+        selectAgent('CHALS');
+        const promoText = `WildCode Developers marketing drive launched. Directing traffic to ${businessURL}`;
+        storeAudit(promoText);
+        speak("Launching advertising sequence for WildCode Developers, MR WAYNE. Directing client traffic to your website.");
+    }
 
-        if (query.includes("sales") || query.includes("lead") || query.includes("client")) {
-            selectAgent('CHALS');
-            return "Routing request to CHALS to handle client negotiations and deal pipelines.";
-        } else if (query.includes("code") || query.includes("build") || query.includes("dev") || query.includes("site")) {
-            selectAgent('MAT');
-            return "Assigning task to MAT to inspect frontend assets and server uptime.";
-        } else if (query.includes("project") || query.includes("time") || query.includes("schedule")) {
-            selectAgent('PRINXE');
-            return "Delegating workflow to PRINXE to keep milestones on schedule.";
-        } else if (query.includes("money") || query.includes("invoice") || query.includes("finance") || query.includes("pay")) {
-            selectAgent('OESTRO');
-            return "Dispatching OESTRO to review ledgers and process transactions.";
-        } else {
-            return "Analyzing business parameters. Task processed and integrated into memory.";
+    // Reasoning Engine
+    function processCommand(cmd) {
+        const input = cmd.trim();
+        const lower = input.toLowerCase();
+
+        // Learning Mode Instruction: "learn: <fact>" or "remember: <fact>"
+        if (lower.startsWith("learn:") || lower.startsWith("remember:")) {
+            const fact = input.substring(input.indexOf(":") + 1).trim();
+            if (fact) {
+                storeKnowledge(fact);
+                storeAudit(`Learned fact: ${fact}`);
+                speak(`Knowledge base updated, MR WAYNE. I have permanently indexed: ${fact}`);
+            } else {
+                speak("Please provide valid knowledge to store, MR WAYNE.");
+            }
+            return;
         }
+
+        // Logic Routing & Reasoning
+        let decision = "";
+        if (lower.includes("advertise") || lower.includes("promote") || lower.includes("marketing") || lower.includes("client")) {
+            selectAgent('CHALS');
+            decision = `Initiating outreach campaign for WildCode Developers. Directing prospects to ${businessURL}`;
+        } else if (lower.includes("website") || lower.includes("code") || lower.includes("dev") || lower.includes("frontend")) {
+            selectAgent('MAT');
+            decision = `Auditing frontend web assets and deployment status for WildCode Developers.`;
+        } else if (lower.includes("phone") || lower.includes("call") || lower.includes("dial")) {
+            decision = `Phone routing engine active. Line configured to reach MR WAYNE at ${targetPhone}`;
+        } else if (lower.includes("finance") || lower.includes("price") || lower.includes("cost") || lower.includes("quote")) {
+            selectAgent('OESTRO');
+            decision = `Reviewing financial allocations and active client web project estimates.`;
+        } else if (lower.includes("status") || lower.includes("report") || lower.includes("memory")) {
+            decision = `Chuck OS active with ${knowledgeBase.length} memory indexes online. All business agents operational.`;
+        } else {
+            decision = `Analyzing operational parameters for WildCode Developers. Command recorded in system memory.`;
+        }
+
+        storeAudit(`Cmd: ${input}`);
+        storeAudit(`Decision: ${decision}`);
+        speak(`${decision}, MR WAYNE.`);
     }
 
     function executeCommand() {
         const input = document.getElementById('cmdInput');
-        const val = input.value.trim();
+        const val = input.value;
         if (!val) return;
 
         playTone(750);
-        
-        // Compute reasoning instead of echoing the user
-        const decision = analyzeAndReason(val);
-
-        saveToMemory(`Cmd: ${val}`);
-        saveToMemory(`Reasoning: ${decision}`);
-        
-        // Speak reason and action directly to MR WAYNE
-        speak(`${decision}, MR WAYNE.`);
+        processCommand(val);
         input.value = '';
     }
 
     function clearMemory() {
-        localStorage.removeItem("chuck_memory");
-        commandMemory = ["Memory reset."];
-        renderMemory();
-        speak("Memory cleared, MR WAYNE.");
+        localStorage.removeItem("chuck_knowledge");
+        localStorage.removeItem("chuck_audit");
+        knowledgeBase = [
+            "Business Name: WildCode Developers",
+            "Website: https://wildcodedevelopers-svg.github.io/WILDCODE-DEVELOPERS/",
+            "Primary Focus: High-performance Frontend Web Design and Web Development",
+            "Target Contact Route: +27 612832392"
+        ];
+        auditLog = ["Memory re-indexed by MR WAYNE."];
+        renderKnowledge();
+        renderAudit();
+        speak("Knowledge base and audit logs re-indexed, MR WAYNE.");
     }
 </script>
 </body>
