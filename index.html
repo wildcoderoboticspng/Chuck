@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuck - Futuristic AI OS</title>
+    <style>
+        :root {
+            --bg-color: #030712;
+            --panel-bg: rgba(10, 20, 35, 0.75);
+            --border-cyan: #00f3ff;
+            --glow-cyan: rgba(0, 243, 255, 0.4);
+            --text-color: #00f3ff;
+            --text-dim: #00a8b3;
+            --orange-alert: #ff6600;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Scanning Grid Background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(0,243,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,243,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* HUD Frame Container */
+        .hud-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Hologram Display Box */
+        .holo-display {
+            position: relative;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-cyan);
+            box-shadow: 0 0 15px var(--glow-cyan);
+            border-radius: 8px;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Sci-Fi Corners */
+        .holo-display::before, .holo-display::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-color: #fff;
+            border-style: solid;
+        }
+        .holo-display::before { top: 5px; left: 5px; border-width: 2px 0 0 2px; }
+        .holo-display::after { bottom: 5px; right: 5px; border-width: 0 2px 2px 0; }
+
+        .holo-data {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 0.65rem;
+            line-height: 1.2;
+            color: var(--text-dim);
+        }
+
+        /* SVG Wireframe Cybernetic Avatar */
+        .wireframe-head {
+            width: 180px;
+            height: 200px;
+            filter: drop-shadow(0 0 8px var(--border-cyan));
+            animation: pulse-glow 3s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% { filter: drop-shadow(0 0 4px var(--border-cyan)); }
+            100% { filter: drop-shadow(0 0 12px var(--border-cyan)); }
+        }
+
+        /* Controls Section */
+        .voice-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cyber-btn {
+            background: transparent;
+            border: 1px solid var(--border-cyan);
+            color: var(--text-color);
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px var(--glow-cyan);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-btn:hover, .cyber-btn.active {
+            background: var(--border-cyan);
+            color: #000;
+            box-shadow: 0 0 20px var(--border-cyan);
+        }
+
+        /* Department Switcher Grid */
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .dept-btn {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--text-dim);
+            color: var(--text-dim);
+            padding: 8px 0;
+            text-align: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .dept-btn.active {
+            border-color: var(--border-cyan);
+            color: var(--text-color);
+            background: rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 8px var(--glow-cyan);
+        }
+
+        /* Agent Info Panels */
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 0.8rem;
+        }
+
+        .panel-title {
+            color: var(--text-color);
+            margin-bottom: 8px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-list {
+            list-style: none;
+            color: #d0f8ff;
+        }
+
+        .panel-list li {
+            margin-bottom: 4px;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .panel-list li::before {
+            content: "›";
+            position: absolute;
+            left: 0;
+            color: var(--border-cyan);
+        }
+
+        /* Approval Action Row */
+        .approval-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 102, 0, 0.08);
+            border: 1px solid var(--orange-alert);
+            padding: 8px;
+            margin-top: 6px;
+            border-radius: 3px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            background: transparent;
+            border: 1px solid var(--border-cyan);
+            color: var(--border-cyan);
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .btn-small.approve {
+            border-color: var(--border-cyan);
+            color: var(--border-cyan);
+        }
+
+        /* Interactive Command Bar */
+        .cmd-bar {
+            display: flex;
+            gap: 6px;
+        }
+
+        .cmd-input {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-cyan);
+            color: var(--text-color);
+            padding: 8px;
+            outline: none;
+            font-size: 0.8rem;
+        }
+
+        .status-text {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hud-container">
+    <!-- Hologram Profile Display -->
+    <div class="holo-display">
+        <div class="holo-data">
+            SYS.HOLO_V2<br>
+            STATUS: ONLINE<br>
+            RENDER_FPS: 6000
+        </div>
+        
+        <!-- Cybernetic Wireframe Head Visual -->
+        <svg class="wireframe-head" viewBox="0 0 100 120" fill="none" stroke="#00f3ff" stroke-width="0.8">
+            <ellipse cx="50" cy="50" rx="35" ry="45" stroke-dasharray="2 1"/>
+            <path d="M 20,40 Q 50,20 80,40" />
+            <path d="M 20,55 Q 50,75 80,55" />
+            <line x1="50" y1="5" x2="50" y2="95" stroke-dasharray="1 1"/>
+            <!-- Eyes -->
+            <polygon points="30,45 42,42 40,48" fill="#00f3ff"/>
+            <polygon points="70,45 58,42 60,48" fill="#00f3ff"/>
+            <!-- Circuit Nodes -->
+            <circle cx="30" cy="70" r="1.5" fill="#00f3ff"/>
+            <circle cx="70" cy="70" r="1.5" fill="#00f3ff"/>
+            <line x1="30" y1="70" x2="50" y2="85"/>
+            <line x1="70" y1="70" x2="50" y2="85"/>
+            <!-- Neck Wireframe -->
+            <path d="M 32,92 L 28,115 M 68,92 L 72,115 M 42,95 L 40,115 M 58,95 L 60,115"/>
+        </svg>
+    </div>
+
+    <!-- Controls -->
+    <div class="voice-section">
+        <button class="cyber-btn" id="voiceToggleBtn" onclick="toggleVoice()">Turn On Voice</button>
+        <div class="status-text" id="statusLabel">Voice engine initialized. Tap button to command.</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="dept-grid">
+        <button class="dept-btn active" onclick="switchDept('sales')">Sales</button>
+        <button class="dept-btn" onclick="switchDept('projects')">Projects</button>
+        <button class="dept-btn" onclick="switchDept('dev')">Dev</button>
+        <button class="dept-btn" onclick="switchDept('finance')">Finance</button>
+    </div>
+
+    <!-- Operational Data Panels -->
+    <div class="panel">
+        <div class="panel-title">
+            <span id="agentTitle">Sales Agent</span>
+            <span style="font-size:0.65rem; color:var(--text-dim)">3 Open Deals</span>
+        </div>
+        <ul class="panel-list" id="agentDetails">
+            <li>Qualified 3 new leads</li>
+            <li>Kite Labs proposal drafted</li>
+            <li>Follow-up sent to 2 quiet deals</li>
+        </ul>
+    </div>
+
+    <div class="panel" style="border-color: var(--orange-alert);">
+        <div class="panel-title" style="color: var(--orange-alert);">Needs Your Approval</div>
+        <div class="approval-row">
+            <div>Send Kite Labs proposal ($12,400)</div>
+            <div class="action-btns">
+                <button class="btn-small approve" onclick="approveAction('Kite Labs Proposal Approved')">Approve</button>
+                <button class="btn-small" onclick="approveAction('Action put on hold')">Hold</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instruction Input -->
+    <div class="cmd-bar">
+        <input type="text" id="cmdInput" class="cmd-input" placeholder="e.g. Chase the late invoice..." onkeydown="if(event.key==='Enter') sendCmd()">
+        <button class="cyber-btn" onclick="sendCmd()">Send</button>
+    </div>
+</div>
+
+<script>
+    let isListening = false;
+    let synth = window.speechSynthesis;
+    let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Synthesize futuristic UI beep
+    function playBeep(freq = 800, type = 'sine') {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+    }
+
+    // Built-in Text-To-Speech engine
+    function speak(text) {
+        if (synth.speaking) synth.cancel();
+        let utterance = new SpeechSynthesisUtterance(text);
+        utterance.pitch = 0.9;
+        utterance.rate = 1.0;
+        synth.speak(utterance);
+    }
+
+    // Toggle Voice Interface State
+    function toggleVoice() {
+        playBeep(1200);
+        const btn = document.getElementById('voiceToggleBtn');
+        const status = document.getElementById('statusLabel');
+
+        if (!isListening) {
+            isListening = true;
+            btn.classList.add('active');
+            btn.innerText = "Voice Active";
+            status.innerText = 'Listening... Say "Hi Chuck, chase the late invoice"';
+            speak("Voice engine online. Standing by for instructions.");
+            startSpeechRecognition();
+        } else {
+            isListening = false;
+            btn.classList.remove('active');
+            btn.innerText = "Turn On Voice";
+            status.innerText = "Voice is off";
+            speak("Voice standby.");
+        }
+    }
+
+    // Native Browser Speech Recognition Hook
+    function startSpeechRecognition() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) return;
+
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('cmdInput').value = transcript;
+            sendCmd();
+        };
+
+        recognition.onend = () => {
+            if (isListening) recognition.start();
+        };
+
+        recognition.start();
+    }
+
+    // Handle Commands Executed
+    function sendCmd() {
+        const input = document.getElementById('cmdInput');
+        const val = input.value.trim();
+        if (!val) return;
+        
+        playBeep(600);
+        speak(`Processing request: ${val}`);
+        document.getElementById('statusLabel').innerText = `Executed: "${val}"`;
+        input.value = '';
+    }
+
+    // Approval Action Visual Feedback
+    function approveAction(msg) {
+        playBeep(900);
+        speak(msg);
+        document.getElementById('statusLabel').innerText = msg;
+    }
+
+    // Department Data Switcher
+    const deptData = {
+        sales: {
+            title: "Sales Agent",
+            list: ["Qualified 3 new leads", "Kite Labs proposal drafted", "Follow-up sent to 2 quiet deals"]
+        },
+        projects: {
+            title: "Project Coordinator",
+            list: ["Sprint 42 completed", "Milestone review scheduled", "Blockers resolved: 2"]
+        },
+        dev: {
+            title: "Dev Orchestrator",
+            list: ["CI/CD pipeline green", "Deployed patch v2.4.1", "Code audit completed"]
+        },
+        finance: {
+            title: "Finance Manager",
+            list: ["Invoices generated: $42k", "1 Overdue payment flagged", "Monthly ledger balanced"]
+        }
+    };
+
+    function switchDept(deptKey) {
+        playBeep(400);
+        document.querySelectorAll('.dept-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+
+        const data = deptData[deptKey];
+        document.getElementById('agentTitle').innerText = data.title;
+        
+        const listContainer = document.getElementById('agentDetails');
+        listContainer.innerHTML = '';
+        data.list.forEach(item => {
+            const li = document.createElement('li');
+            li.innerText = item;
+            listContainer.appendChild(li);
+        });
+    }
+</script>
+</body>
+</html>
